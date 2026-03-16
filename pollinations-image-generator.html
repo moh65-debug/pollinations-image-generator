@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Image Generator - Pollinations</title>
+    <title>AI Image Generator - Pollinations BYOP</title>
     <style>
         * {
             margin: 0;
@@ -50,6 +50,82 @@
 
         .content {
             padding: 40px;
+        }
+
+        .api-key-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .api-key-section h3 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .api-key-section p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .api-key-section a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .api-key-section a:hover {
+            text-decoration: underline;
+        }
+
+        .api-key-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .api-key-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: monospace;
+        }
+
+        .api-key-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .save-key-btn {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .save-key-btn:hover {
+            background: #5568d3;
+        }
+
+        .key-status {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .key-status.error {
+            color: #dc3545;
         }
 
         .input-section {
@@ -247,6 +323,26 @@
             border-color: #667eea;
         }
 
+        .info-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e7f3ff;
+            border-radius: 10px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .info-box h4 {
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            color: #1976D2;
+        }
+
+        .info-box p {
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.5;
+        }
+
         @media (max-width: 600px) {
             .header h1 {
                 font-size: 2rem;
@@ -259,6 +355,10 @@
             .options-grid {
                 grid-template-columns: 1fr;
             }
+
+            .api-key-input-group {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -266,10 +366,25 @@
     <div class="container">
         <div class="header">
             <h1>✨ AI Image Generator</h1>
-            <p>Create stunning images from text descriptions</p>
+            <p>Create stunning images with your Pollinations API key</p>
         </div>
 
         <div class="content">
+            <div class="api-key-section">
+                <h3>🔑 Your Pollinations API Key (BYOP - Bring Your Own Pollen)</h3>
+                <p>Get your free API key at <a href="https://enter.pollinations.ai" target="_blank">enter.pollinations.ai</a> - You only pay for what you use!</p>
+                <div class="api-key-input-group">
+                    <input 
+                        type="password" 
+                        id="apiKey" 
+                        class="api-key-input" 
+                        placeholder="pk_your_api_key_here or sk_your_secret_key"
+                    >
+                    <button class="save-key-btn" onclick="saveApiKey()">Save Key</button>
+                </div>
+                <div id="keyStatus" class="key-status" style="display: none;"></div>
+            </div>
+
             <div class="input-section">
                 <label for="prompt">What would you like to create?</label>
                 <textarea 
@@ -288,6 +403,8 @@
                         <option value="flux-anime">Flux Anime</option>
                         <option value="flux-3d">Flux 3D</option>
                         <option value="turbo">Turbo (Fast)</option>
+                        <option value="gptimage">GPT Image</option>
+                        <option value="seedream">Seedream</option>
                     </select>
                 </div>
 
@@ -317,6 +434,11 @@
                 </div>
             </div>
 
+            <div class="info-box">
+                <h4>💡 About BYOP (Bring Your Own Pollen)</h4>
+                <p>This app uses the BYOP model - you use your own API key and only pay for what you generate. No subscriptions, no hidden fees. Get started with free daily Pollen credits at Pollinations!</p>
+            </div>
+
             <div class="result-section" id="resultSection">
                 <div class="image-container" id="imageContainer">
                     <div class="loading" id="loading">
@@ -337,12 +459,57 @@
 
     <script>
         let currentImageUrl = '';
+        let apiKey = localStorage.getItem('pollinationsApiKey') || '';
+
+        // Load saved API key on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            if (apiKey) {
+                document.getElementById('apiKey').value = apiKey;
+                showKeyStatus('API key loaded from storage', false);
+            }
+        });
+
+        function saveApiKey() {
+            const keyInput = document.getElementById('apiKey');
+            const key = keyInput.value.trim();
+            
+            if (!key) {
+                showKeyStatus('Please enter an API key', true);
+                return;
+            }
+
+            if (!key.startsWith('pk_') && !key.startsWith('sk_')) {
+                showKeyStatus('Invalid key format. Key should start with pk_ or sk_', true);
+                return;
+            }
+
+            apiKey = key;
+            localStorage.setItem('pollinationsApiKey', key);
+            showKeyStatus('✓ API key saved successfully!', false);
+        }
+
+        function showKeyStatus(message, isError) {
+            const statusEl = document.getElementById('keyStatus');
+            statusEl.textContent = message;
+            statusEl.className = 'key-status' + (isError ? ' error' : '');
+            statusEl.style.display = 'block';
+            
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        }
 
         function useExample(promptText) {
             document.getElementById('prompt').value = promptText;
         }
 
         function generateImage() {
+            if (!apiKey) {
+                alert('Please enter and save your API key first!');
+                document.getElementById('apiKey').focus();
+                return;
+            }
+
             const prompt = document.getElementById('prompt').value.trim();
             
             if (!prompt) {
@@ -365,7 +532,7 @@
             generateBtn.disabled = true;
 
             const encodedPrompt = encodeURIComponent(prompt);
-            currentImageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&model=${model}&nologo=true`;
+            currentImageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&model=${model}&nologo=true&key=${apiKey}`;
 
             generatedImage.onload = function() {
                 loading.style.display = 'none';
@@ -375,7 +542,7 @@
 
             generatedImage.onerror = function() {
                 loading.style.display = 'none';
-                alert('Failed to generate image. Please try again.');
+                alert('Failed to generate image. Please check your API key and try again.');
                 generateBtn.disabled = false;
             };
 
