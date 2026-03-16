@@ -391,6 +391,39 @@
             display: block;
         }
 
+        .credits {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .credit-logo {
+            height: 40px;
+            margin-bottom: 10px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .credit-logo:hover {
+            opacity: 1;
+        }
+
+        .credit-text {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .credit-text a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .credit-text a:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 600px) {
             .header h1 {
                 font-size: 2rem;
@@ -541,6 +574,15 @@
                     <button class="action-btn" onclick="copyImageUrl()">Copy URL</button>
                     <button class="action-btn" onclick="generateAgain()">Generate Again</button>
                 </div>
+            </div>
+
+            <div class="credits">
+                <p>
+                    <a href="https://pollinations.ai" target="_blank" rel="noopener noreferrer">
+                        <img src="https://pollinations.ai/logo-white.svg" alt="Pollinations.ai Logo" class="credit-logo">
+                    </a>
+                </p>
+                <p class="credit-text">Built with <a href="https://pollinations.ai" target="_blank" rel="noopener noreferrer">pollinations.ai</a></p>
             </div>
         </div>
     </div>
