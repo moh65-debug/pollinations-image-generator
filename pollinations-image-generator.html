@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Image Generator - Pollinations BYOP</title>
+    <meta name="description" content="Generate stunning AI images with Pollinations AI. Bring your own API key and pay only for what you use.">
     <style>
         * {
             margin: 0;
@@ -25,7 +26,7 @@
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 900px;
+            max-width: 1000px;
             width: 100%;
             overflow: hidden;
         }
@@ -169,7 +170,7 @@
             flex-direction: column;
         }
 
-        select {
+        select, input[type="number"] {
             padding: 12px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
@@ -180,9 +181,29 @@
             transition: border-color 0.3s;
         }
 
-        select:focus {
+        select:focus, input[type="number"]:focus {
             outline: none;
             border-color: #667eea;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-label {
+            font-size: 0.9rem;
+            font-weight: normal;
+            cursor: pointer;
+            margin: 0;
         }
 
         .generate-btn {
@@ -343,6 +364,33 @@
             line-height: 1.5;
         }
 
+        .advanced-options {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .advanced-toggle {
+            cursor: pointer;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            user-select: none;
+        }
+
+        .advanced-toggle:hover {
+            color: #5568d3;
+        }
+
+        .advanced-content {
+            display: none;
+        }
+
+        .advanced-content.show {
+            display: block;
+        }
+
         @media (max-width: 600px) {
             .header h1 {
                 font-size: 2rem;
@@ -366,7 +414,7 @@
     <div class="container">
         <div class="header">
             <h1>✨ AI Image Generator</h1>
-            <p>Create stunning images with your Pollinations API key</p>
+            <p>Powered by Pollinations AI - BYOP Model</p>
         </div>
 
         <div class="content">
@@ -399,23 +447,62 @@
                     <label for="model">AI Model</label>
                     <select id="model">
                         <option value="flux">Flux (Default)</option>
-                        <option value="flux-realism">Flux Realism</option>
-                        <option value="flux-anime">Flux Anime</option>
-                        <option value="flux-3d">Flux 3D</option>
-                        <option value="turbo">Turbo (Fast)</option>
+                        <option value="zimage">ZImage</option>
+                        <option value="flux-2-dev">Flux 2 Dev</option>
                         <option value="gptimage">GPT Image</option>
+                        <option value="gptimage-large">GPT Image Large</option>
+                        <option value="seedream5">Seedream 5</option>
                         <option value="seedream">Seedream</option>
+                        <option value="seedream-pro">Seedream Pro</option>
+                        <option value="nanobanana">Nanobanana</option>
+                        <option value="nanobanana-2">Nanobanana 2</option>
+                        <option value="nanobanana-pro">Nanobanana Pro</option>
+                        <option value="klein">Klein</option>
+                        <option value="kontext">Kontext</option>
+                        <option value="imagen-4">Imagen 4</option>
+                        <option value="grok-imagine">Grok Imagine</option>
                     </select>
                 </div>
 
                 <div class="option-group">
                     <label for="size">Image Size</label>
                     <select id="size">
-                        <option value="1024x1024">Square (1024x1024)</option>
-                        <option value="1280x720">Landscape (1280x720)</option>
-                        <option value="720x1280">Portrait (720x1280)</option>
-                        <option value="1920x1080">Wide (1920x1080)</option>
+                        <option value="1024x1024">Square (1024×1024)</option>
+                        <option value="1280x720">Landscape (1280×720)</option>
+                        <option value="720x1280">Portrait (720×1280)</option>
+                        <option value="1920x1080">Wide (1920×1080)</option>
+                        <option value="512x512">Small Square (512×512)</option>
+                        <option value="768x768">Medium Square (768×768)</option>
                     </select>
+                </div>
+
+                <div class="option-group">
+                    <label for="seed">Seed (for reproducibility)</label>
+                    <input type="number" id="seed" value="-1" min="-1" max="2147483647" placeholder="-1 for random">
+                </div>
+            </div>
+
+            <div class="advanced-options">
+                <div class="advanced-toggle" onclick="toggleAdvanced()">
+                    ⚙️ Advanced Options (Click to expand)
+                </div>
+                <div class="advanced-content" id="advancedContent">
+                    <div class="options-grid">
+                        <div class="option-group">
+                            <label for="negativePrompt">Negative Prompt</label>
+                            <input type="text" id="negativePrompt" placeholder="What to avoid..." style="padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px;">
+                        </div>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="enhance">
+                        <label for="enhance" class="checkbox-label">Enhance prompt with AI</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="safe">
+                        <label for="safe" class="checkbox-label">Enable safety filters</label>
+                    </div>
                 </div>
             </div>
 
@@ -431,19 +518,20 @@
                     <span class="example-chip" onclick="useExample('Abstract art with vibrant colors, geometric shapes, modern style')">Abstract Art</span>
                     <span class="example-chip" onclick="useExample('A magical forest with glowing mushrooms and fireflies, fantasy illustration')">Magic Forest</span>
                     <span class="example-chip" onclick="useExample('Professional portrait of a business woman in modern office, natural lighting')">Professional Portrait</span>
+                    <span class="example-chip" onclick="useExample('A serene zen garden with stone paths and cherry blossoms')">Zen Garden</span>
                 </div>
             </div>
 
             <div class="info-box">
                 <h4>💡 About BYOP (Bring Your Own Pollen)</h4>
-                <p>This app uses the BYOP model - you use your own API key and only pay for what you generate. No subscriptions, no hidden fees. Get started with free daily Pollen credits at Pollinations!</p>
+                <p>This app uses the BYOP model - you bring your own API key and only pay for what you generate. No subscriptions, no hidden fees. Perfect for creators who want full control over their AI costs!</p>
             </div>
 
             <div class="result-section" id="resultSection">
                 <div class="image-container" id="imageContainer">
                     <div class="loading" id="loading">
                         <div class="spinner"></div>
-                        <div class="loading-text">Creating your image...</div>
+                        <div class="loading-text">Creating your masterpiece...</div>
                     </div>
                     <img id="generatedImage" class="generated-image" style="display: none;">
                 </div>
@@ -468,6 +556,11 @@
                 showKeyStatus('API key loaded from storage', false);
             }
         });
+
+        function toggleAdvanced() {
+            const content = document.getElementById('advancedContent');
+            content.classList.toggle('show');
+        }
 
         function saveApiKey() {
             const keyInput = document.getElementById('apiKey');
@@ -520,6 +613,10 @@
             const model = document.getElementById('model').value;
             const size = document.getElementById('size').value;
             const [width, height] = size.split('x');
+            const seed = document.getElementById('seed').value;
+            const enhance = document.getElementById('enhance').checked;
+            const safe = document.getElementById('safe').checked;
+            const negativePrompt = document.getElementById('negativePrompt').value.trim();
 
             const resultSection = document.getElementById('resultSection');
             const loading = document.getElementById('loading');
@@ -532,29 +629,65 @@
             generateBtn.disabled = true;
 
             const encodedPrompt = encodeURIComponent(prompt);
-            currentImageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&model=${model}&nologo=true&key=${apiKey}`;
+            
+            // Build URL with parameters
+            let url = `https://gen.pollinations.ai/image/${encodedPrompt}?width=${width}&height=${height}&model=${model}`;
+            
+            if (seed !== '-1') {
+                url += `&seed=${seed}`;
+            }
+            
+            if (enhance) {
+                url += `&enhance=true`;
+            }
+            
+            if (safe) {
+                url += `&safe=true`;
+            }
+            
+            if (negativePrompt) {
+                url += `&negative_prompt=${encodeURIComponent(negativePrompt)}`;
+            }
 
-            generatedImage.onload = function() {
+            // Add authentication
+            currentImageUrl = url;
+
+            // Use fetch with Authorization header for better error handling
+            fetch(url, {
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.error?.message || `Error ${response.status}`);
+                    });
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const imageUrl = URL.createObjectURL(blob);
+                generatedImage.onload = function() {
+                    loading.style.display = 'none';
+                    generatedImage.style.display = 'block';
+                    generateBtn.disabled = false;
+                };
+                generatedImage.src = imageUrl;
+            })
+            .catch(error => {
                 loading.style.display = 'none';
-                generatedImage.style.display = 'block';
                 generateBtn.disabled = false;
-            };
-
-            generatedImage.onerror = function() {
-                loading.style.display = 'none';
-                alert('Failed to generate image. Please check your API key and try again.');
-                generateBtn.disabled = false;
-            };
-
-            generatedImage.src = currentImageUrl;
+                alert(`Failed to generate image: ${error.message}\n\nPlease check your API key and try again.`);
+            });
         }
 
         function downloadImage() {
             if (!currentImageUrl) return;
             
             const link = document.createElement('a');
-            link.href = currentImageUrl;
-            link.download = 'ai-generated-image.png';
+            link.href = document.getElementById('generatedImage').src;
+            link.download = `pollinations-${Date.now()}.png`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
