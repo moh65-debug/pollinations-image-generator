@@ -3,9 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Image Generator - Pollinations BYOP</title>
+    <title>Pollinations AI - Image Generator</title>
     <meta name="description" content="Generate stunning AI images with Pollinations AI. Bring your own API key and pay only for what you use.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #FF6B9D;
+            --primary-light: #FFB3D9;
+            --primary-dark: #C73866;
+            --secondary: #4ECDC4;
+            --secondary-light: #95E1D3;
+            --accent: #FFA07A;
+            --dark: #1A1A2E;
+            --dark-alt: #16213E;
+            --light: #FAFAFA;
+            --gray: #6C757D;
+            --gray-light: #E9ECEF;
+            --success: #51CF66;
+            --error: #FF6B6B;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --shadow-lg: rgba(0, 0, 0, 0.15);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,576 +34,227 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            box-shadow: 
+                0 25px 80px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+            max-width: 1100px;
             width: 100%;
             overflow: hidden;
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
+            background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+            padding: 50px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
+
+        .logo-container { margin-bottom: 20px; position: relative; z-index: 1; }
+        .logo { height: 50px; filter: brightness(0) invert(1); }
 
         .header h1 {
-            font-size: 2.5rem;
+            font-family: 'DM Serif Display', serif;
+            font-size: 3rem;
             margin-bottom: 10px;
-            font-weight: 700;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FFA07A 50%, #4ECDC4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.95;
-        }
+        .header p { font-size: 1.1rem; color: rgba(255, 255, 255, 0.8); font-weight: 300; }
 
-        .content {
-            padding: 40px;
-        }
+        .content { padding: 50px; }
 
-        .api-key-section {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-        }
-
-        .api-key-section h3 {
-            font-size: 1rem;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .api-key-section p {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 15px;
-        }
-
-        .api-key-section a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .api-key-section a:hover {
-            text-decoration: underline;
-        }
-
-        .api-key-input-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        .api-key-input {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-family: monospace;
-        }
-
-        .api-key-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .save-key-btn {
-            padding: 12px 24px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .save-key-btn:hover {
-            background: #5568d3;
-        }
-
-        .key-status {
-            margin-top: 10px;
-            font-size: 0.85rem;
-            color: #28a745;
-            font-weight: 600;
-        }
-
-        .key-status.error {
-            color: #dc3545;
-        }
-
-        .input-section {
-            margin-bottom: 30px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #333;
-            font-size: 0.95rem;
-        }
-
-        .prompt-input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: border-color 0.3s;
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .prompt-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .option-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        select, input[type="number"] {
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-family: inherit;
-            background: white;
-            cursor: pointer;
-            transition: border-color 0.3s;
-        }
-
-        select:focus, input[type="number"]:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 5px;
-        }
-
-        input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .checkbox-label {
-            font-size: 0.9rem;
-            font-weight: normal;
-            cursor: pointer;
-            margin: 0;
-        }
-
-        .generate-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .generate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .generate-btn:active {
-            transform: translateY(0);
-        }
-
-        .generate-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .result-section {
-            margin-top: 30px;
-            display: none;
-        }
-
-        .result-section.active {
-            display: block;
-        }
-
-        .image-container {
-            position: relative;
-            border-radius: 15px;
-            overflow: hidden;
-            background: #f5f5f5;
-            min-height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .generated-image {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 60px 20px;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            color: #666;
-            font-size: 1rem;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #667eea;
-            background: white;
-            color: #667eea;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .action-btn:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        .examples {
-            margin-top: 20px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-
-        .examples h3 {
-            font-size: 1rem;
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .example-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .example-chip {
-            padding: 8px 16px;
-            background: white;
-            border: 1px solid #ddd;
+        .auth-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.05) 0%, rgba(78, 205, 196, 0.05) 100%);
             border-radius: 20px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
+            border: 2px solid rgba(255, 107, 157, 0.2);
         }
 
-        .example-chip:hover {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
+        .auth-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; }
+        .auth-status { display: flex; align-items: center; gap: 10px; padding: 8px 18px; border-radius: 25px; font-size: 0.9rem; font-weight: 600; }
+        .auth-status.connected { background: var(--success); color: white; }
+        .auth-status.disconnected { background: var(--gray-light); color: var(--gray); }
 
-        .info-box {
-            margin-top: 20px;
-            padding: 15px;
-            background: #e7f3ff;
-            border-radius: 10px;
-            border-left: 4px solid #2196F3;
-        }
+        .auth-tabs { display: flex; gap: 12px; margin-bottom: 25px; background: rgba(255, 255, 255, 0.6); padding: 6px; border-radius: 15px; }
+        .auth-tab { flex: 1; padding: 14px; border: none; cursor: pointer; border-radius: 12px; font-weight: 600; transition: 0.3s; }
+        .auth-tab.active { background: var(--primary); color: white; }
 
-        .info-box h4 {
-            font-size: 0.95rem;
-            margin-bottom: 8px;
-            color: #1976D2;
-        }
+        .auth-content { display: none; }
+        .auth-content.active { display: block; }
 
-        .info-box p {
-            font-size: 0.85rem;
-            color: #555;
-            line-height: 1.5;
-        }
+        .api-key-input-group { display: flex; gap: 12px; margin-top: 15px; }
+        .api-key-input { flex: 1; padding: 16px; border: 2px solid var(--gray-light); border-radius: 15px; font-family: monospace; }
+        
+        .save-key-btn { background: var(--primary); color: white; border: none; padding: 16px 28px; border-radius: 15px; font-weight: 600; cursor: pointer; }
 
-        .advanced-options {
-            margin-top: 15px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
+        .prompt-input { width: 100%; padding: 18px; border: 2px solid var(--gray-light); border-radius: 18px; min-height: 120px; margin-top: 10px; font-size: 1.05rem; }
 
-        .advanced-toggle {
-            cursor: pointer;
-            font-weight: 600;
-            color: #667eea;
-            margin-bottom: 10px;
-            user-select: none;
-        }
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; margin: 35px 0; }
+        .option-group { display: flex; flex-direction: column; gap: 10px; }
+        
+        select, input[type="number"] { padding: 14px; border: 2px solid var(--gray-light); border-radius: 15px; font-size: 1rem; }
 
-        .advanced-toggle:hover {
-            color: #5568d3;
-        }
+        .generate-btn { width: 100%; padding: 22px; background: var(--primary); color: white; border: none; border-radius: 20px; font-size: 1.3rem; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .generate-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255, 107, 157, 0.3); }
+        .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        .advanced-content {
-            display: none;
-        }
+        .result-section { margin-top: 40px; display: none; }
+        .result-section.active { display: block; }
+        .image-container { background: #f8f9fa; border-radius: 20px; min-height: 400px; display: flex; align-items: center; justify-content: center; border: 3px solid var(--gray-light); overflow: hidden; }
+        .generated-image { max-width: 100%; height: auto; }
 
-        .advanced-content.show {
-            display: block;
-        }
+        .action-buttons { display: flex; gap: 15px; margin-top: 25px; }
+        .action-btn { flex: 1; padding: 16px; border: 2px solid var(--primary); color: var(--primary); border-radius: 15px; font-weight: 600; cursor: pointer; background: white; }
+        .action-btn:hover { background: var(--primary); color: white; }
 
-        .credits {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid #e0e0e0;
-            text-align: center;
-        }
+        .example-chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+        .example-chip { padding: 10px 15px; background: rgba(255, 107, 157, 0.1); border-radius: 20px; cursor: pointer; font-size: 0.9rem; }
+        
+        .loading { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .credit-logo {
-            height: 40px;
-            margin-bottom: 10px;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-
-        .credit-logo:hover {
-            opacity: 1;
-        }
-
-        .credit-text {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .credit-text a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .credit-text a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 600px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .content {
-                padding: 25px;
-            }
-
-            .options-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .api-key-input-group {
-                flex-direction: column;
-            }
-        }
+        @media (max-width: 768px) { .header h1 { font-size: 2rem; } .options-grid { grid-template-columns: 1fr; } .action-buttons { flex-direction: column; } }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>✨ AI Image Generator</h1>
-            <p>Powered by Pollinations AI - BYOP Model</p>
+            <div class="logo-container">
+                <img src="https://enter.pollinations.ai/logo_text_black.svg" alt="Pollinations AI" class="logo">
+            </div>
+            <h1>Image Generator</h1>
+            <p>Create stunning AI-powered imagery</p>
         </div>
 
         <div class="content">
-            <div class="api-key-section">
-                <h3>🔑 Your Pollinations API Key (BYOP - Bring Your Own Pollen)</h3>
-                <p>Get your free API key at <a href="https://enter.pollinations.ai" target="_blank">enter.pollinations.ai</a> - You only pay for what you use!</p>
-                <div class="api-key-input-group">
-                    <input 
-                        type="password" 
-                        id="apiKey" 
-                        class="api-key-input" 
-                        placeholder="pk_your_api_key_here or sk_your_secret_key"
-                    >
-                    <button class="save-key-btn" onclick="saveApiKey()">Save Key</button>
+            <div class="auth-section">
+                <div class="auth-header">
+                    <h3>🔐 Authentication</h3>
+                    <div class="auth-status disconnected" id="authStatus">
+                        <span id="authStatusText">Not Connected</span>
+                    </div>
                 </div>
-                <div id="keyStatus" class="key-status" style="display: none;"></div>
+
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="switchAuthTab('connect')">Connect Account</button>
+                    <button class="auth-tab" onclick="switchAuthTab('apikey')">Use API Key</button>
+                </div>
+
+                <div class="auth-content active" id="connectTab">
+                    <div style="text-align:center; padding: 20px;">
+                        <p>Use your account from enter.pollinations.ai</p>
+                        <a href="https://enter.pollinations.ai" target="_blank" class="generate-btn" style="display:inline-block; margin-top:15px; text-decoration:none; width:auto; padding: 15px 30px;">Open Dashboard</a>
+                    </div>
+                </div>
+
+                <div class="auth-content" id="apikeyTab">
+                    <div class="api-key-input-group">
+                        <input type="password" id="apiKey" class="api-key-input" placeholder="sk_... or pk_...">
+                        <button class="save-key-btn" onclick="saveApiKey()">Save Key</button>
+                    </div>
+                    <div id="keyDetails" style="display:none; margin-top:15px;">
+                        <button class="action-btn" onclick="disconnectApiKey()" style="border-color: var(--error); color: var(--error);">Disconnect</button>
+                    </div>
+                </div>
             </div>
 
             <div class="input-section">
-                <label for="prompt">What would you like to create?</label>
-                <textarea 
-                    id="prompt" 
-                    class="prompt-input" 
-                    placeholder="Describe your image in detail... (e.g., 'A serene mountain landscape at sunset with a crystal clear lake reflecting the orange sky')"
-                ></textarea>
+                <label style="font-weight:bold;">Prompt</label>
+                <textarea id="prompt" class="prompt-input" placeholder="A futuristic city..."></textarea>
             </div>
 
             <div class="options-grid">
                 <div class="option-group">
-                    <label for="model">AI Model</label>
-                    <select id="model">
-                        <option value="flux">Flux (Default)</option>
-                        <option value="zimage">ZImage</option>
-                        <option value="flux-2-dev">Flux 2 Dev</option>
-                        <option value="gptimage">GPT Image</option>
-                        <option value="gptimage-large">GPT Image Large</option>
-                        <option value="seedream5">Seedream 5</option>
-                        <option value="seedream">Seedream</option>
-                        <option value="seedream-pro">Seedream Pro</option>
-                        <option value="nanobanana">Nanobanana</option>
-                        <option value="nanobanana-2">Nanobanana 2</option>
-                        <option value="nanobanana-pro">Nanobanana Pro</option>
-                        <option value="klein">Klein</option>
-                        <option value="kontext">Kontext</option>
-                        <option value="imagen-4">Imagen 4</option>
-                        <option value="grok-imagine">Grok Imagine</option>
-                    </select>
+                    <label>Model</label>
+                    <div id="modelLoading">Fetching models...</div>
+                    <select id="model" style="display: none;" onchange="updateModelCost()"></select>
+                    <div id="modelCost" style="display:none; margin-top:8px; padding:8px 14px; background:rgba(78,205,196,0.1); border:1.5px solid rgba(78,205,196,0.4); border-radius:10px; font-size:0.85rem; color:#2a7d78; font-weight:500;"></div>
                 </div>
-
                 <div class="option-group">
-                    <label for="size">Image Size</label>
+                    <label>Size</label>
                     <select id="size">
-                        <option value="1024x1024">Square (1024×1024)</option>
-                        <option value="1280x720">Landscape (1280×720)</option>
-                        <option value="720x1280">Portrait (720×1280)</option>
-                        <option value="1920x1080">Wide (1920×1080)</option>
-                        <option value="512x512">Small Square (512×512)</option>
-                        <option value="768x768">Medium Square (768×768)</option>
+                        <option value="1024x1024">Square (1024x1024)</option>
+                        <option value="1024x1792">Portrait (1024x1792)</option>
+                        <option value="1792x1024">Landscape (1792x1024)</option>
                     </select>
                 </div>
-
                 <div class="option-group">
-                    <label for="seed">Seed (for reproducibility)</label>
-                    <input type="number" id="seed" value="-1" min="-1" max="2147483647" placeholder="-1 for random">
+                    <label>Seed (-1 for random)</label>
+                    <input type="number" id="seed" value="-1">
                 </div>
             </div>
 
-            <div class="advanced-options">
-                <div class="advanced-toggle" onclick="toggleAdvanced()">
-                    ⚙️ Advanced Options (Click to expand)
-                </div>
-                <div class="advanced-content" id="advancedContent">
-                    <div class="options-grid">
-                        <div class="option-group">
-                            <label for="negativePrompt">Negative Prompt</label>
-                            <input type="text" id="negativePrompt" placeholder="What to avoid..." style="padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px;">
-                        </div>
-                    </div>
-                    
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="enhance">
-                        <label for="enhance" class="checkbox-label">Enhance prompt with AI</label>
-                    </div>
-                    
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="safe">
-                        <label for="safe" class="checkbox-label">Enable safety filters</label>
-                    </div>
-                </div>
-            </div>
+            <button class="generate-btn" id="generateBtn" onclick="generateImage()">Generate Image</button>
 
-            <button class="generate-btn" onclick="generateImage()">
-                Generate Image
-            </button>
-
-            <div class="examples">
-                <h3>Try these examples:</h3>
-                <div class="example-chips">
-                    <span class="example-chip" onclick="useExample('A futuristic city with flying cars at night, neon lights, cyberpunk style')">Cyberpunk City</span>
-                    <span class="example-chip" onclick="useExample('A cute robot gardener tending to colorful flowers in a sunny garden')">Robot Gardener</span>
-                    <span class="example-chip" onclick="useExample('Abstract art with vibrant colors, geometric shapes, modern style')">Abstract Art</span>
-                    <span class="example-chip" onclick="useExample('A magical forest with glowing mushrooms and fireflies, fantasy illustration')">Magic Forest</span>
-                    <span class="example-chip" onclick="useExample('Professional portrait of a business woman in modern office, natural lighting')">Professional Portrait</span>
-                    <span class="example-chip" onclick="useExample('A serene zen garden with stone paths and cherry blossoms')">Zen Garden</span>
-                </div>
-            </div>
-
-            <div class="info-box">
-                <h4>💡 About BYOP (Bring Your Own Pollen)</h4>
-                <p>This app uses the BYOP model - you bring your own API key and only pay for what you generate. No subscriptions, no hidden fees. Perfect for creators who want full control over their AI costs!</p>
+            <div class="example-chips">
+                <span class="example-chip" onclick="document.getElementById('prompt').value='Cyberpunk city, neon lights'">Cyberpunk City</span>
+                <span class="example-chip" onclick="document.getElementById('prompt').value='Fantasy landscape, floating islands'">Fantasy World</span>
             </div>
 
             <div class="result-section" id="resultSection">
-                <div class="image-container" id="imageContainer">
-                    <div class="loading" id="loading">
+                <div class="image-container">
+                    <div id="loading" style="display:none;" class="loading">
                         <div class="spinner"></div>
-                        <div class="loading-text">Creating your masterpiece...</div>
+                        <p>Generating...</p>
                     </div>
-                    <img id="generatedImage" class="generated-image" style="display: none;">
+                    <img id="generatedImage" class="generated-image">
                 </div>
-
                 <div class="action-buttons">
                     <button class="action-btn" onclick="downloadImage()">Download</button>
                     <button class="action-btn" onclick="copyImageUrl()">Copy URL</button>
-                    <button class="action-btn" onclick="generateAgain()">Generate Again</button>
                 </div>
-            </div>
-
-            <div class="credits">
-                <p>
-                    <a href="https://pollinations.ai" target="_blank" rel="noopener noreferrer">
-                        <img src="https://pollinations.ai/icon-192.png" alt="Pollinations.ai Logo" class="credit-logo">
-                    </a>
-                </p>
-                <p class="credit-text">Built with <a href="https://pollinations.ai" target="_blank" rel="noopener noreferrer">pollinations.ai</a></p>
             </div>
         </div>
     </div>
@@ -590,170 +262,407 @@
     <script>
         let currentImageUrl = '';
         let apiKey = localStorage.getItem('pollinationsApiKey') || '';
-
-        // Load saved API key on page load
-        window.addEventListener('DOMContentLoaded', function() {
-            if (apiKey) {
+        
+        window.onload = async () => {
+            if(apiKey) {
                 document.getElementById('apiKey').value = apiKey;
-                showKeyStatus('API key loaded from storage', false);
+                // Switch to API key tab so user can see their key
+                document.querySelectorAll('.auth-tab').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.auth-content').forEach(c => c.classList.remove('active'));
+                document.querySelectorAll('.auth-tab')[1].classList.add('active');
+                document.getElementById('apikeyTab').classList.add('active');
+                // Silently re-verify stored key to show live balance/profile info
+                try {
+                    const headers = { 'Authorization': `Bearer ${apiKey}` };
+                    const keyRes = await fetch('https://gen.pollinations.ai/account/key', { headers });
+                    if (keyRes.ok) {
+                        const keyData = await keyRes.json();
+                        let balance = null, profileName = null;
+                        try { const b = await fetch('https://gen.pollinations.ai/account/balance', { headers }); if(b.ok){ const bd=await b.json(); balance=bd?.balance??null; } } catch(_){}
+                        try { const p = await fetch('https://gen.pollinations.ai/account/profile', { headers }); if(p.ok){ const pd=await p.json(); profileName=pd?.name||pd?.githubUsername||pd?.email||null; } } catch(_){}
+                        let detail = '';
+                        if (profileName) detail += `<strong>${profileName}</strong>`;
+                        if (balance !== null) detail += `${detail ? ' &mdash; ' : ''}Balance: <strong>${parseFloat(balance).toFixed(4)} pollen</strong>`;
+                        if (keyData?.type) detail += `${detail ? ' &mdash; ' : ''}Type: <strong>${keyData.type}</strong>`;
+                        document.getElementById('keyDetails').innerHTML = `
+                            <div style="padding:10px 0; color: var(--gray); font-size:0.9rem;">${detail || 'Authenticated ✓'}</div>
+                            <button class="action-btn" onclick="disconnectApiKey()" style="border-color: var(--error); color: var(--error); margin-top:8px;">Disconnect</button>
+                        `;
+                        updateAuthStatus(true);
+                    } else {
+                        // Stored key is now invalid — clear it
+                        apiKey = '';
+                        localStorage.removeItem('pollinationsApiKey');
+                        document.getElementById('apiKey').value = '';
+                        showAuthError("Saved key is no longer valid. Please re-enter your API key.");
+                        updateAuthStatus(false);
+                    }
+                } catch(_) {
+                    // Network error — show as connected optimistically
+                    updateAuthStatus(true);
+                }
             }
-        });
+            loadModels();
+        };
 
-        function toggleAdvanced() {
-            const content = document.getElementById('advancedContent');
-            content.classList.toggle('show');
+        // Stores full model metadata keyed by model id
+        const modelData = {};
+
+        async function loadModels() {
+            const modelSelect = document.getElementById('model');
+            const modelLoading = document.getElementById('modelLoading');
+
+            try {
+                const response = await fetch('https://gen.pollinations.ai/image/models');
+                const models = await response.json();
+
+                let availableModels = models.filter(m => {
+                    const modalities = m.output_modalities || m.outputModalities || [];
+                    return modalities.includes('image');
+                });
+
+                if (availableModels.length === 0) availableModels = models;
+
+                modelSelect.innerHTML = '';
+
+                availableModels.forEach(model => {
+                    const modelId = model.name || model.id || (typeof model === 'string' ? model : null);
+                    if (!modelId) return;
+
+                    // Store full model object for use in cost display
+                    modelData[modelId] = model;
+
+                    const option = document.createElement('option');
+                    option.value = modelId;
+                    // Show paid_only badge in the label
+                    const label = modelId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                    option.textContent = model.paid_only ? `${label} ★` : label;
+                    if (modelId === 'flux') option.selected = true;
+                    modelSelect.appendChild(option);
+                });
+
+                modelLoading.style.display = 'none';
+                modelSelect.style.display = 'block';
+                updateModelCost();
+
+            } catch (error) {
+                console.error('Error loading models:', error);
+                modelLoading.textContent = 'Error loading models. Using defaults.';
+                modelSelect.innerHTML = '<option value="flux">Flux (Default)</option><option value="turbo">Turbo</option>';
+                modelLoading.style.display = 'none';
+                modelSelect.style.display = 'block';
+            }
         }
 
-        function saveApiKey() {
-            const keyInput = document.getElementById('apiKey');
-            const key = keyInput.value.trim();
-            
-            if (!key) {
-                showKeyStatus('Please enter an API key', true);
+        function updateModelCost() {
+            const modelId = document.getElementById('model').value;
+            const costEl = document.getElementById('modelCost');
+            const model = modelData[modelId];
+
+            if (!model) { costEl.style.display = 'none'; return; }
+
+            const pricing = model.pricing || {};
+            const currency = pricing.currency || 'pollen';
+            const perImage = parseFloat(pricing.completionImageTokens ?? 0);
+
+            // Build a breakdown of all pricing fields
+            const fieldLabels = {
+                completionImageTokens: '🖼️ Per image',
+                promptTextTokens: '📝 Per text token',
+                promptImageTokens: '🖼️ Per input image token',
+                promptCachedTokens: '⚡ Per cached token',
+            };
+
+            let rows = '';
+            for (const [field, label] of Object.entries(fieldLabels)) {
+                if (pricing[field] !== undefined) {
+                    const val = parseFloat(pricing[field]);
+                    rows += `<span style="display:inline-flex;align-items:center;gap:4px;margin-right:14px;">${label}: <strong>${val} ${currency}</strong></span>`;
+                }
+            }
+
+            // Description line
+            const desc = model.description ? `<div style="color:#555;font-size:0.82rem;margin-bottom:6px;">${model.description}</div>` : '';
+            const paidBadge = model.paid_only ? `<span style="background:#FF6B9D;color:white;border-radius:6px;padding:2px 7px;font-size:0.75rem;font-weight:700;margin-left:6px;">Paid</span>` : `<span style="background:#51CF66;color:white;border-radius:6px;padding:2px 7px;font-size:0.75rem;font-weight:700;margin-left:6px;">Free tier</span>`;
+
+            costEl.innerHTML = `${desc}<div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">${rows}${paidBadge}</div>`;
+            costEl.style.display = 'block';
+        }
+
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.auth-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Tab').classList.add('active');
+        }
+
+        async function saveApiKey() {
+            const val = document.getElementById('apiKey').value.trim();
+            if (!val.startsWith('sk_') && !val.startsWith('pk_')) {
+                showAuthError("Invalid key format. Key must start with sk_ or pk_.");
                 return;
             }
 
-            if (!key.startsWith('pk_') && !key.startsWith('sk_')) {
-                showKeyStatus('Invalid key format. Key should start with pk_ or sk_', true);
-                return;
+            const btn = document.querySelector('.save-key-btn');
+            btn.textContent = 'Verifying...';
+            btn.disabled = true;
+
+            try {
+                const headers = { 'Authorization': `Bearer ${val}` };
+
+                // Verify key validity via /account/key (correct endpoint per API spec)
+                const keyRes = await fetch('https://gen.pollinations.ai/account/key', { headers });
+                const keyData = await keyRes.json();
+
+                if (!keyRes.ok || keyData?.valid === false) {
+                    const msg = keyData?.error?.message || keyData?.message || `Authentication failed (HTTP ${keyRes.status})`;
+                    showAuthError(msg);
+                    return;
+                }
+
+                // Fetch balance from /account/balance
+                let balance = null;
+                try {
+                    const balRes = await fetch('https://gen.pollinations.ai/account/balance', { headers });
+                    if (balRes.ok) {
+                        const balData = await balRes.json();
+                        balance = balData?.balance ?? null;
+                    }
+                } catch (_) {}
+
+                // Fetch profile for display name
+                let profileName = null;
+                try {
+                    const profRes = await fetch('https://gen.pollinations.ai/account/profile', { headers });
+                    if (profRes.ok) {
+                        const profData = await profRes.json();
+                        profileName = profData?.name || profData?.githubUsername || profData?.email || null;
+                    }
+                } catch (_) {}
+
+                // Save key
+                apiKey = val;
+                localStorage.setItem('pollinationsApiKey', val);
+                clearAuthError();
+
+                // Build info line
+                let detail = '';
+                if (profileName) detail += `<strong>${profileName}</strong>`;
+                if (balance !== null) detail += `${detail ? ' &mdash; ' : ''}Balance: <strong>${parseFloat(balance).toFixed(4)} pollen</strong>`;
+                if (keyData?.type) detail += `${detail ? ' &mdash; ' : ''}Type: <strong>${keyData.type}</strong>`;
+
+                document.getElementById('keyDetails').innerHTML = `
+                    <div style="padding:10px 0; color: var(--gray); font-size:0.9rem;">${detail || 'Authenticated ✓'}</div>
+                    <button class="action-btn" onclick="disconnectApiKey()" style="border-color: var(--error); color: var(--error); margin-top:8px;">Disconnect</button>
+                `;
+                updateAuthStatus(true);
+            } catch (e) {
+                showAuthError("Network error while verifying key: " + e.message);
+            } finally {
+                btn.textContent = 'Save Key';
+                btn.disabled = false;
             }
-
-            apiKey = key;
-            localStorage.setItem('pollinationsApiKey', key);
-            showKeyStatus('✓ API key saved successfully!', false);
         }
 
-        function showKeyStatus(message, isError) {
-            const statusEl = document.getElementById('keyStatus');
-            statusEl.textContent = message;
-            statusEl.className = 'key-status' + (isError ? ' error' : '');
-            statusEl.style.display = 'block';
-            
-            setTimeout(() => {
-                statusEl.style.display = 'none';
-            }, 5000);
-        }
-
-        function useExample(promptText) {
-            document.getElementById('prompt').value = promptText;
-        }
-
-        function generateImage() {
-            if (!apiKey) {
-                alert('Please enter and save your API key first!');
-                document.getElementById('apiKey').focus();
-                return;
+        function showAuthError(msg) {
+            let el = document.getElementById('authError');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'authError';
+                el.style.cssText = 'margin-top:12px; padding:12px 16px; background:#fff0f0; border:1.5px solid var(--error); border-radius:12px; color:#c0392b; font-size:0.9rem;';
+                document.getElementById('apikeyTab').appendChild(el);
             }
+            el.textContent = '⚠️ ' + msg;
+            el.style.display = 'block';
+        }
 
+        function clearAuthError() {
+            const el = document.getElementById('authError');
+            if (el) el.style.display = 'none';
+        }
+
+        function disconnectApiKey() {
+            apiKey = '';
+            localStorage.removeItem('pollinationsApiKey');
+            document.getElementById('apiKey').value = '';
+            document.getElementById('keyDetails').innerHTML = '';
+            clearAuthError();
+            updateAuthStatus(false);
+        }
+
+        function updateAuthStatus(connected) {
+            const status = document.getElementById('authStatus');
+            const details = document.getElementById('keyDetails');
+            if (connected) {
+                status.className = 'auth-status connected';
+                document.getElementById('authStatusText').textContent = 'Connected';
+                details.style.display = 'block';
+            } else {
+                status.className = 'auth-status disconnected';
+                document.getElementById('authStatusText').textContent = 'Not Connected';
+                details.style.display = 'none';
+            }
+        }
+
+        async function generateImage() {
+            if (!apiKey) return showGenerateError("Please set and verify an API key first.");
             const prompt = document.getElementById('prompt').value.trim();
-            
-            if (!prompt) {
-                alert('Please enter a description for your image');
-                return;
-            }
+            if (!prompt) return showGenerateError("Please enter a prompt.");
+
+            const btn = document.getElementById('generateBtn');
+            const loader = document.getElementById('loading');
+            const img = document.getElementById('generatedImage');
+            const res = document.getElementById('resultSection');
+
+            btn.disabled = true;
+            res.style.display = 'block';
+            loader.style.display = 'flex';
+            img.style.display = 'none';
+            clearGenerateError();
 
             const model = document.getElementById('model').value;
-            const size = document.getElementById('size').value;
-            const [width, height] = size.split('x');
+            const [w, h] = document.getElementById('size').value.split('x');
             const seed = document.getElementById('seed').value;
-            const enhance = document.getElementById('enhance').checked;
-            const safe = document.getElementById('safe').checked;
-            const negativePrompt = document.getElementById('negativePrompt').value.trim();
 
-            const resultSection = document.getElementById('resultSection');
-            const loading = document.getElementById('loading');
-            const generatedImage = document.getElementById('generatedImage');
-            const generateBtn = document.querySelector('.generate-btn');
+            let url = `https://gen.pollinations.ai/image/${encodeURIComponent(prompt)}?width=${w}&height=${h}&model=${model}&nologo=true`;
+            if (seed !== "-1") url += `&seed=${seed}`;
 
-            resultSection.classList.add('active');
-            loading.style.display = 'block';
-            generatedImage.style.display = 'none';
-            generateBtn.disabled = true;
+            try {
+                const response = await fetch(url, { headers: { 'Authorization': `Bearer ${apiKey}` } });
 
-            const encodedPrompt = encodeURIComponent(prompt);
-            
-            // Build URL with parameters
-            let url = `https://gen.pollinations.ai/image/${encodedPrompt}?width=${width}&height=${height}&model=${model}`;
-            
-            if (seed !== '-1') {
-                url += `&seed=${seed}`;
-            }
-            
-            if (enhance) {
-                url += `&enhance=true`;
-            }
-            
-            if (safe) {
-                url += `&safe=true`;
-            }
-            
-            if (negativePrompt) {
-                url += `&negative_prompt=${encodeURIComponent(negativePrompt)}`;
-            }
-
-            // Add authentication
-            currentImageUrl = url;
-
-            // Use fetch with Authorization header for better error handling
-            fetch(url, {
-                headers: {
-                    'Authorization': `Bearer ${apiKey}`
-                }
-            })
-            .then(response => {
                 if (!response.ok) {
-                    return response.json().then(err => {
-                        throw new Error(err.error?.message || `Error ${response.status}`);
-                    });
+                    // Try to parse the JSON error body
+                    let errorMsg = `Request failed (HTTP ${response.status})`;
+                    try {
+                        const contentType = response.headers.get('content-type') || '';
+                        if (contentType.includes('application/json')) {
+                            const errData = await response.json();
+                            errorMsg = errData?.error?.message || errData?.message || errorMsg;
+                            if (errData?.error?.code) errorMsg += ` [${errData.error.code}]`;
+
+                            // If error message contains a cost hint, try to parse and cache it
+                            const costMatch = errorMsg.match(/costs?\s*~?([\d.]+)\s*pollen/i);
+                            if (costMatch) {
+                                const modelId = document.getElementById('model').value;
+                                if (modelData[modelId]) {
+                                    modelData[modelId].pricing = modelData[modelId].pricing || {};
+                                    modelData[modelId].pricing.completionImageTokens = String(parseFloat(costMatch[1]));
+                                    updateModelCost();
+                                }
+                            }
+                        } else {
+                            const text = await response.text();
+                            if (text) errorMsg = text;
+                        }
+                    } catch (_) {}
+                    throw new Error(errorMsg);
                 }
-                return response.blob();
-            })
-            .then(blob => {
-                const imageUrl = URL.createObjectURL(blob);
-                generatedImage.onload = function() {
-                    loading.style.display = 'none';
-                    generatedImage.style.display = 'block';
-                    generateBtn.disabled = false;
+
+                const blob = await response.blob();
+                currentImageUrl = URL.createObjectURL(blob);
+                img.src = currentImageUrl;
+                img.onload = () => {
+                    loader.style.display = 'none';
+                    img.style.display = 'block';
+                    btn.disabled = false;
                 };
-                generatedImage.src = imageUrl;
-            })
-            .catch(error => {
-                loading.style.display = 'none';
-                generateBtn.disabled = false;
-                alert(`Failed to generate image: ${error.message}\n\nPlease check your API key and try again.`);
-            });
+
+                // After successful generation, fetch actual cost from usage history
+                fetchLastRequestCost();
+            } catch (e) {
+                loader.style.display = 'none';
+                btn.disabled = false;
+                showGenerateError(e.message);
+            }
+        }
+
+        function showGenerateError(msg) {
+            let el = document.getElementById('generateError');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'generateError';
+                el.style.cssText = 'margin-top:20px; padding:16px 20px; background:#fff0f0; border:1.5px solid var(--error); border-radius:16px; color:#c0392b; font-size:0.95rem; line-height:1.5;';
+                document.getElementById('resultSection').prepend(el);
+            }
+            el.innerHTML = '<strong>⚠️ Generation failed</strong><br>' + escapeHtml(msg);
+            el.style.display = 'block';
+        }
+
+        function clearGenerateError() {
+            const el = document.getElementById('generateError');
+            if (el) el.style.display = 'none';
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
+        async function fetchLastRequestCost() {
+            if (!apiKey) return;
+            try {
+                // Small delay so the usage record is committed
+                await new Promise(r => setTimeout(r, 1500));
+                const res = await fetch('https://gen.pollinations.ai/account/usage?limit=1', {
+                    headers: { 'Authorization': `Bearer ${apiKey}` }
+                });
+                if (!res.ok) return;
+                const data = await res.json();
+                const record = data?.usage?.[0];
+                if (!record) return;
+
+                const costUsd = record.cost_usd ?? null;
+                const model = record.model ?? null;
+
+                let el = document.getElementById('actualCost');
+                if (!el) {
+                    el = document.createElement('div');
+                    el.id = 'actualCost';
+                    el.style.cssText = 'margin-top:16px; padding:12px 18px; background:rgba(81,207,102,0.1); border:1.5px solid rgba(81,207,102,0.5); border-radius:12px; font-size:0.88rem; color:#2d6a3f; font-weight:500;';
+                    document.getElementById('resultSection').querySelector('.action-buttons').after(el);
+                }
+
+                let parts = ['✅ Generation complete'];
+                if (model) parts.push(`Model: <strong>${escapeHtml(model)}</strong>`);
+                if (costUsd !== null) parts.push(`Cost: <strong>$${parseFloat(costUsd).toFixed(6)} USD</strong>`);
+
+                // Also update the balance display if present
+                updateBalanceDisplay();
+
+                el.innerHTML = parts.join(' &nbsp;·&nbsp; ');
+                el.style.display = 'block';
+            } catch (_) {}
+        }
+
+        async function updateBalanceDisplay() {
+            if (!apiKey) return;
+            try {
+                const res = await fetch('https://gen.pollinations.ai/account/balance', {
+                    headers: { 'Authorization': `Bearer ${apiKey}` }
+                });
+                if (!res.ok) return;
+                const data = await res.json();
+                const balance = data?.balance ?? null;
+                if (balance === null) return;
+                // Update the balance shown in keyDetails if it's there
+                const keyDetails = document.getElementById('keyDetails');
+                if (keyDetails) {
+                    const balSpan = keyDetails.querySelector('[data-balance]');
+                    if (balSpan) balSpan.textContent = parseFloat(balance).toFixed(4) + ' pollen';
+                }
+            } catch (_) {}
         }
 
         function downloadImage() {
-            if (!currentImageUrl) return;
-            
-            const link = document.createElement('a');
-            link.href = document.getElementById('generatedImage').src;
-            link.download = `pollinations-${Date.now()}.png`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const a = document.createElement('a');
+            a.href = currentImageUrl;
+            a.download = "generated-image.png";
+            a.click();
         }
 
         function copyImageUrl() {
-            if (!currentImageUrl) return;
-            
-            navigator.clipboard.writeText(currentImageUrl).then(() => {
-                alert('Image URL copied to clipboard!');
-            }).catch(() => {
-                alert('Failed to copy URL');
-            });
+            navigator.clipboard.writeText(currentImageUrl);
+            alert("Copied to clipboard!");
         }
-
-        function generateAgain() {
-            generateImage();
-        }
-
-        document.getElementById('prompt').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && e.ctrlKey) {
-                generateImage();
-            }
-        });
     </script>
 </body>
 </html>
