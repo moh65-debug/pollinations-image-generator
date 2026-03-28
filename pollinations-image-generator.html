@@ -111,7 +111,7 @@
 
         .header p { font-size: 1.1rem; color: rgba(255, 255, 255, 0.8); font-weight: 300; }
 
-        .content { padding: 50px; }
+        .content { padding: 40px 50px; }
 
         .auth-section {
             margin-bottom: 40px;
@@ -127,45 +127,61 @@
         .auth-status.disconnected { background: var(--gray-light); color: var(--gray); }
 
         .auth-tabs { display: flex; gap: 12px; margin-bottom: 25px; background: rgba(255, 255, 255, 0.6); padding: 6px; border-radius: 15px; }
-        .auth-tab { flex: 1; padding: 14px; border: none; cursor: pointer; border-radius: 12px; font-weight: 600; transition: 0.3s; }
+        .auth-tab { flex: 1; padding: 14px; border: none; cursor: pointer; border-radius: 12px; font-weight: 600; transition: 0.3s; background: transparent; color: var(--gray); }
         .auth-tab.active { background: var(--primary); color: white; }
 
         .auth-content { display: none; }
         .auth-content.active { display: block; }
 
         .api-key-input-group { display: flex; gap: 12px; margin-top: 15px; }
-        .api-key-input { flex: 1; padding: 16px; border: 2px solid var(--gray-light); border-radius: 15px; font-family: monospace; }
+        .api-key-input { flex: 1; padding: 16px; border: 2px solid var(--gray-light); border-radius: 15px; font-family: monospace; outline: none; transition: 0.2s; }
+        .api-key-input:focus { border-color: var(--primary); }
         
-        .save-key-btn { background: var(--primary); color: white; border: none; padding: 16px 28px; border-radius: 15px; font-weight: 600; cursor: pointer; }
+        .save-key-btn, .connect-btn { background: var(--primary); color: white; border: none; padding: 16px 28px; border-radius: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .save-key-btn:hover, .connect-btn:hover { background: var(--primary-dark); }
 
-        .prompt-input { width: 100%; padding: 18px; border: 2px solid var(--gray-light); border-radius: 18px; min-height: 120px; margin-top: 10px; font-size: 1.05rem; }
+        .prompt-input { width: 100%; padding: 18px; border: 2px solid var(--gray-light); border-radius: 18px; min-height: 120px; margin-top: 10px; font-size: 1.05rem; outline: none; transition: 0.2s; resize: vertical; }
+        .prompt-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.1); }
 
-        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; margin: 35px 0; }
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; margin: 25px 0; }
         .option-group { display: flex; flex-direction: column; gap: 10px; }
         
-        select, input[type="number"] { padding: 14px; border: 2px solid var(--gray-light); border-radius: 15px; font-size: 1rem; }
+        select, input[type="number"], input[type="text"] { width: 100%; padding: 14px; border: 2px solid var(--gray-light); border-radius: 15px; font-size: 1rem; outline: none; transition: 0.2s; background: white; }
+        select:focus, input[type="number"]:focus, input[type="text"]:focus { border-color: var(--secondary); }
 
-        .generate-btn { width: 100%; padding: 22px; background: var(--primary); color: white; border: none; border-radius: 20px; font-size: 1.3rem; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .custom-size-row { display: flex; gap: 10px; align-items: center; }
+        
+        details.advanced-options { margin: 25px 0; padding: 20px; background: rgba(255, 255, 255, 0.6); border-radius: 18px; border: 1.5px solid var(--gray-light); transition: all 0.3s ease; }
+        details.advanced-options summary { font-weight: 600; cursor: pointer; user-select: none; outline: none; color: var(--dark-alt); list-style: none; display: flex; align-items: center; gap: 8px; }
+        details.advanced-options summary::before { content: '⚙️'; font-size: 1.2rem; }
+        details.advanced-options[open] summary { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1.5px solid var(--gray-light); }
+
+        .checkbox-group { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .checkbox-group input { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; }
+
+        .generate-btn { width: 100%; padding: 22px; background: var(--primary); color: white; border: none; border-radius: 20px; font-size: 1.3rem; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px; }
         .generate-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255, 107, 157, 0.3); }
-        .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .generate-btn:active { transform: translateY(-1px); }
+        .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
         .result-section { margin-top: 40px; display: none; }
-        .result-section.active { display: block; }
-        .image-container { background: #f8f9fa; border-radius: 20px; min-height: 400px; display: flex; align-items: center; justify-content: center; border: 3px solid var(--gray-light); overflow: hidden; }
-        .generated-image { max-width: 100%; height: auto; }
+        .result-section.active { display: block; animation: slideUp 0.5s ease; }
+        .image-container { background: #f8f9fa; border-radius: 20px; min-height: 400px; display: flex; align-items: center; justify-content: center; border: 3px solid var(--gray-light); overflow: hidden; position: relative; }
+        .generated-image { max-width: 100%; height: auto; display: block; }
 
         .action-buttons { display: flex; gap: 15px; margin-top: 25px; }
-        .action-btn { flex: 1; padding: 16px; border: 2px solid var(--primary); color: var(--primary); border-radius: 15px; font-weight: 600; cursor: pointer; background: white; }
+        .action-btn { flex: 1; padding: 16px; border: 2px solid var(--primary); color: var(--primary); border-radius: 15px; font-weight: 600; cursor: pointer; background: white; transition: 0.2s; }
         .action-btn:hover { background: var(--primary); color: white; }
 
         .example-chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
-        .example-chip { padding: 10px 15px; background: rgba(255, 107, 157, 0.1); border-radius: 20px; cursor: pointer; font-size: 0.9rem; }
+        .example-chip { padding: 10px 15px; background: rgba(255, 107, 157, 0.1); border-radius: 20px; cursor: pointer; font-size: 0.9rem; transition: 0.2s; color: var(--primary-dark); font-weight: 500; border: 1px solid rgba(255, 107, 157, 0.2); }
+        .example-chip:hover { background: var(--primary); color: white; }
         
-        .loading { display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        .loading { display: flex; flex-direction: column; align-items: center; gap: 15px; color: var(--gray); font-weight: 500; }
+        .spinner { width: 45px; height: 45px; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        @media (max-width: 768px) { .header h1 { font-size: 2rem; } .options-grid { grid-template-columns: 1fr; } .action-buttons { flex-direction: column; } }
+        @media (max-width: 768px) { .header h1 { font-size: 2.2rem; } .options-grid { grid-template-columns: 1fr; } .action-buttons { flex-direction: column; } .content { padding: 30px 25px; } }
     </style>
 </head>
 <body>
@@ -193,9 +209,9 @@
                 </div>
 
                 <div class="auth-content active" id="connectTab">
-                    <div style="text-align:center; padding: 20px;">
-                        <p>Use your account from enter.pollinations.ai</p>
-                        <a href="https://enter.pollinations.ai" target="_blank" class="generate-btn" style="display:inline-block; margin-top:15px; text-decoration:none; width:auto; padding: 15px 30px;">Open Dashboard</a>
+                    <div style="text-align:center; padding: 10px 20px 20px;">
+                        <p style="color: var(--gray); margin-bottom: 20px;">Securely connect to your Pollinations account to use your pollen balance.</p>
+                        <button class="connect-btn" onclick="startBYOPAuth()">Connect with Pollinations</button>
                     </div>
                 </div>
 
@@ -204,55 +220,81 @@
                         <input type="password" id="apiKey" class="api-key-input" placeholder="sk_... or pk_...">
                         <button class="save-key-btn" onclick="saveApiKey()">Save Key</button>
                     </div>
-                    <div id="keyDetails" style="display:none; margin-top:15px;">
-                        <button class="action-btn" onclick="disconnectApiKey()" style="border-color: var(--error); color: var(--error);">Disconnect</button>
-                    </div>
+                </div>
+
+                <!-- Shared key details container (shows when authenticated on either tab) -->
+                <div id="keyDetails" style="display:none; margin-top:20px; padding-top: 15px; border-top: 1.5px solid rgba(0,0,0,0.05);">
+                    <div id="keyDetailsText" style="color: var(--dark); font-size:0.95rem; line-height: 1.5;"></div>
+                    <button class="action-btn" onclick="disconnectApiKey()" style="border-color: var(--error); color: var(--error); margin-top:12px; padding: 10px 20px; flex: none; display: inline-block;">Disconnect</button>
                 </div>
             </div>
 
             <div class="input-section">
-                <label style="font-weight:bold;">Prompt</label>
-                <textarea id="prompt" class="prompt-input" placeholder="A futuristic city..."></textarea>
+                <label style="font-weight:bold; font-size: 1.1rem; color: var(--dark);">Prompt</label>
+                <textarea id="prompt" class="prompt-input" placeholder="Describe the image you want to see... (e.g., A futuristic city glowing with neon lights, highly detailed)"></textarea>
+            </div>
+
+            <div class="example-chips">
+                <span class="example-chip" onclick="document.getElementById('prompt').value='Cyberpunk city, glowing neon signs, rainy streets, cinematic lighting'">Cyberpunk City</span>
+                <span class="example-chip" onclick="document.getElementById('prompt').value='Fantasy landscape, floating islands, majestic waterfalls, ethereal atmosphere'">Fantasy World</span>
+                <span class="example-chip" onclick="document.getElementById('prompt').value='A cute golden retriever wearing a space suit on Mars, digital art'">Space Dog</span>
             </div>
 
             <div class="options-grid">
                 <div class="option-group">
-                    <label>Model</label>
-                    <div id="modelLoading">Fetching models...</div>
+                    <label style="font-weight: 600;">Model</label>
+                    <div id="modelLoading" style="color: var(--gray); font-size: 0.9rem;">Fetching models...</div>
                     <select id="model" style="display: none;" onchange="updateModelCost()"></select>
                     <div id="modelCost" style="display:none; margin-top:8px; padding:8px 14px; background:rgba(78,205,196,0.1); border:1.5px solid rgba(78,205,196,0.4); border-radius:10px; font-size:0.85rem; color:#2a7d78; font-weight:500;"></div>
                 </div>
                 <div class="option-group">
-                    <label>Size</label>
-                    <select id="size">
+                    <label style="font-weight: 600;">Size</label>
+                    <select id="size" onchange="toggleCustomSize()">
                         <option value="1024x1024">Square (1024x1024)</option>
                         <option value="1024x1792">Portrait (1024x1792)</option>
                         <option value="1792x1024">Landscape (1792x1024)</option>
+                        <option value="custom">Custom...</option>
                     </select>
-                </div>
-                <div class="option-group">
-                    <label>Seed (-1 for random)</label>
-                    <input type="number" id="seed" value="-1">
+                    <div id="customSizeInputs" class="custom-size-row" style="display: none; margin-top: 5px;">
+                        <input type="number" id="customWidth" placeholder="Width" value="1024" step="8" min="256" max="2048">
+                        <span style="color: var(--gray); font-weight: bold;">&times;</span>
+                        <input type="number" id="customHeight" placeholder="Height" value="1024" step="8" min="256" max="2048">
+                    </div>
                 </div>
             </div>
+
+            <details class="advanced-options">
+                <summary>Advanced Options</summary>
+                <div class="options-grid" style="margin-top: 5px; margin-bottom: 0;">
+                    <div class="option-group">
+                        <label>Negative Prompt</label>
+                        <input type="text" id="negativePrompt" placeholder="ugly, blurry, low quality...">
+                    </div>
+                    <div class="option-group">
+                        <label>Seed (-1 for random)</label>
+                        <input type="number" id="seed" value="-1">
+                    </div>
+                    <div class="option-group" style="justify-content: center;">
+                        <label class="checkbox-group">
+                            <input type="checkbox" id="enhancePrompt">
+                            <span>Auto-Enhance Prompt</span>
+                        </label>
+                    </div>
+                </div>
+            </details>
 
             <button class="generate-btn" id="generateBtn" onclick="generateImage()">Generate Image</button>
-
-            <div class="example-chips">
-                <span class="example-chip" onclick="document.getElementById('prompt').value='Cyberpunk city, neon lights'">Cyberpunk City</span>
-                <span class="example-chip" onclick="document.getElementById('prompt').value='Fantasy landscape, floating islands'">Fantasy World</span>
-            </div>
 
             <div class="result-section" id="resultSection">
                 <div class="image-container">
                     <div id="loading" style="display:none;" class="loading">
                         <div class="spinner"></div>
-                        <p>Generating...</p>
+                        <p>Generating your masterpiece...</p>
                     </div>
                     <img id="generatedImage" class="generated-image">
                 </div>
                 <div class="action-buttons">
-                    <button class="action-btn" onclick="downloadImage()">Download</button>
+                    <button class="action-btn" id="downloadBtn" onclick="downloadImage()">Download Image</button>
                     <button class="action-btn" onclick="copyImageUrl()">Copy URL</button>
                 </div>
             </div>
@@ -264,46 +306,89 @@
         let apiKey = localStorage.getItem('pollinationsApiKey') || '';
         
         window.onload = async () => {
-            if(apiKey) {
-                document.getElementById('apiKey').value = apiKey;
-                // Switch to API key tab so user can see their key
-                document.querySelectorAll('.auth-tab').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.auth-content').forEach(c => c.classList.remove('active'));
-                document.querySelectorAll('.auth-tab')[1].classList.add('active');
-                document.getElementById('apikeyTab').classList.add('active');
-                // Silently re-verify stored key to show live balance/profile info
-                try {
-                    const headers = { 'Authorization': `Bearer ${apiKey}` };
-                    const keyRes = await fetch('https://gen.pollinations.ai/account/key', { headers });
-                    if (keyRes.ok) {
-                        const keyData = await keyRes.json();
-                        let balance = null, profileName = null;
-                        try { const b = await fetch('https://gen.pollinations.ai/account/balance', { headers }); if(b.ok){ const bd=await b.json(); balance=bd?.balance??null; } } catch(_){}
-                        try { const p = await fetch('https://gen.pollinations.ai/account/profile', { headers }); if(p.ok){ const pd=await p.json(); profileName=pd?.name||pd?.githubUsername||pd?.email||null; } } catch(_){}
-                        let detail = '';
-                        if (profileName) detail += `<strong>${profileName}</strong>`;
-                        if (balance !== null) detail += `${detail ? ' &mdash; ' : ''}Balance: <strong>${parseFloat(balance).toFixed(4)} pollen</strong>`;
-                        if (keyData?.type) detail += `${detail ? ' &mdash; ' : ''}Type: <strong>${keyData.type}</strong>`;
-                        document.getElementById('keyDetails').innerHTML = `
-                            <div style="padding:10px 0; color: var(--gray); font-size:0.9rem;">${detail || 'Authenticated ✓'}</div>
-                            <button class="action-btn" onclick="disconnectApiKey()" style="border-color: var(--error); color: var(--error); margin-top:8px;">Disconnect</button>
-                        `;
-                        updateAuthStatus(true);
-                    } else {
-                        // Stored key is now invalid — clear it
-                        apiKey = '';
-                        localStorage.removeItem('pollinationsApiKey');
-                        document.getElementById('apiKey').value = '';
-                        showAuthError("Saved key is no longer valid. Please re-enter your API key.");
-                        updateAuthStatus(false);
-                    }
-                } catch(_) {
-                    // Network error — show as connected optimistically
-                    updateAuthStatus(true);
+            // Check for BYOP Redirect Hash
+            if (window.location.hash) {
+                const hashParams = new URLSearchParams(window.location.hash.slice(1));
+                const hashKey = hashParams.get('api_key');
+                if (hashKey) {
+                    apiKey = hashKey;
+                    localStorage.setItem('pollinationsApiKey', apiKey);
+                    // Clear the hash from the URL silently
+                    window.history.replaceState(null, '', window.location.pathname + window.location.search);
                 }
             }
+
+            if(apiKey) {
+                document.getElementById('apiKey').value = apiKey;
+                verifyAndLoadKey(apiKey);
+            }
+            
             loadModels();
         };
+
+        function startBYOPAuth() {
+            // Redirect URL back to this app
+            const redirectUrl = encodeURIComponent(window.location.href.split('#')[0]);
+            window.location.href = `https://enter.pollinations.ai/authorize?redirect_url=${redirectUrl}`;
+        }
+
+        async function verifyAndLoadKey(val, showErrors = false) {
+            try {
+                const headers = { 'Authorization': `Bearer ${val}` };
+                const keyRes = await fetch('https://gen.pollinations.ai/account/key', { headers });
+                
+                if (!keyRes.ok) {
+                    throw new Error(`Authentication failed (HTTP ${keyRes.status})`);
+                }
+                
+                const keyData = await keyRes.json();
+                if (keyData?.valid === false) {
+                    throw new Error("Saved key is no longer valid.");
+                }
+
+                // Fetch balance
+                let balance = null, profileName = null;
+                try { 
+                    const b = await fetch('https://gen.pollinations.ai/account/balance', { headers }); 
+                    if(b.ok){ const bd=await b.json(); balance=bd?.balance??null; } 
+                } catch(_) {}
+                
+                // Fetch profile
+                try { 
+                    const p = await fetch('https://gen.pollinations.ai/account/profile', { headers }); 
+                    if(p.ok){ const pd=await p.json(); profileName=pd?.name||pd?.githubUsername||pd?.email||null; } 
+                } catch(_) {}
+
+                // Build Detail Text
+                let detail = '';
+                if (profileName) detail += `👤 User: <strong>${profileName}</strong><br>`;
+                if (balance !== null) detail += `💰 Balance: <strong data-balance="${balance}">${parseFloat(balance).toFixed(4)} pollen</strong><br>`;
+                if (keyData?.type) detail += `🔑 Key Type: <strong>${keyData.type}</strong>`;
+                
+                document.getElementById('keyDetailsText').innerHTML = detail || '<strong>Authenticated ✓</strong>';
+                
+                // Ensure UI reflects the active key
+                apiKey = val;
+                localStorage.setItem('pollinationsApiKey', val);
+                document.getElementById('apiKey').value = val;
+                clearAuthError();
+                updateAuthStatus(true);
+                
+                // Switch to API tab if manual save was triggered, otherwise stay wherever they are
+                if (showErrors && document.getElementById('apikeyTab').classList.contains('active')) {
+                    // Do nothing, already on the correct tab
+                } else if (!document.getElementById('apikeyTab').classList.contains('active') && !document.getElementById('connectTab').classList.contains('active')) {
+                     switchAuthTab('connect');
+                }
+
+            } catch (e) {
+                apiKey = '';
+                localStorage.removeItem('pollinationsApiKey');
+                document.getElementById('apiKey').value = '';
+                if (showErrors) showAuthError(e.message);
+                updateAuthStatus(false);
+            }
+        }
 
         // Stores full model metadata keyed by model id
         const modelData = {};
@@ -317,7 +402,7 @@
                 const models = await response.json();
 
                 let availableModels = models.filter(m => {
-                    const modalities = m.output_modalities || m.outputModalities || [];
+                    const modalities = m.output_modalities || m.outputModalities ||[];
                     return modalities.includes('image');
                 });
 
@@ -329,12 +414,10 @@
                     const modelId = model.name || model.id || (typeof model === 'string' ? model : null);
                     if (!modelId) return;
 
-                    // Store full model object for use in cost display
                     modelData[modelId] = model;
 
                     const option = document.createElement('option');
                     option.value = modelId;
-                    // Show paid_only badge in the label
                     const label = modelId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
                     option.textContent = model.paid_only ? `${label} ★` : label;
                     if (modelId === 'flux') option.selected = true;
@@ -363,25 +446,19 @@
 
             const pricing = model.pricing || {};
             const currency = pricing.currency || 'pollen';
-            const perImage = parseFloat(pricing.completionImageTokens ?? 0);
 
-            // Build a breakdown of all pricing fields
             const fieldLabels = {
-                completionImageTokens: '🖼️ Per image',
-                promptTextTokens: '📝 Per text token',
-                promptImageTokens: '🖼️ Per input image token',
-                promptCachedTokens: '⚡ Per cached token',
+                completionImageTokens: '🖼️ Per image'
             };
 
             let rows = '';
-            for (const [field, label] of Object.entries(fieldLabels)) {
+            for (const[field, label] of Object.entries(fieldLabels)) {
                 if (pricing[field] !== undefined) {
                     const val = parseFloat(pricing[field]);
                     rows += `<span style="display:inline-flex;align-items:center;gap:4px;margin-right:14px;">${label}: <strong>${val} ${currency}</strong></span>`;
                 }
             }
 
-            // Description line
             const desc = model.description ? `<div style="color:#555;font-size:0.82rem;margin-bottom:6px;">${model.description}</div>` : '';
             const paidBadge = model.paid_only ? `<span style="background:#FF6B9D;color:white;border-radius:6px;padding:2px 7px;font-size:0.75rem;font-weight:700;margin-left:6px;">Paid</span>` : `<span style="background:#51CF66;color:white;border-radius:6px;padding:2px 7px;font-size:0.75rem;font-weight:700;margin-left:6px;">Free tier</span>`;
 
@@ -407,61 +484,10 @@
             btn.textContent = 'Verifying...';
             btn.disabled = true;
 
-            try {
-                const headers = { 'Authorization': `Bearer ${val}` };
+            await verifyAndLoadKey(val, true);
 
-                // Verify key validity via /account/key (correct endpoint per API spec)
-                const keyRes = await fetch('https://gen.pollinations.ai/account/key', { headers });
-                const keyData = await keyRes.json();
-
-                if (!keyRes.ok || keyData?.valid === false) {
-                    const msg = keyData?.error?.message || keyData?.message || `Authentication failed (HTTP ${keyRes.status})`;
-                    showAuthError(msg);
-                    return;
-                }
-
-                // Fetch balance from /account/balance
-                let balance = null;
-                try {
-                    const balRes = await fetch('https://gen.pollinations.ai/account/balance', { headers });
-                    if (balRes.ok) {
-                        const balData = await balRes.json();
-                        balance = balData?.balance ?? null;
-                    }
-                } catch (_) {}
-
-                // Fetch profile for display name
-                let profileName = null;
-                try {
-                    const profRes = await fetch('https://gen.pollinations.ai/account/profile', { headers });
-                    if (profRes.ok) {
-                        const profData = await profRes.json();
-                        profileName = profData?.name || profData?.githubUsername || profData?.email || null;
-                    }
-                } catch (_) {}
-
-                // Save key
-                apiKey = val;
-                localStorage.setItem('pollinationsApiKey', val);
-                clearAuthError();
-
-                // Build info line
-                let detail = '';
-                if (profileName) detail += `<strong>${profileName}</strong>`;
-                if (balance !== null) detail += `${detail ? ' &mdash; ' : ''}Balance: <strong>${parseFloat(balance).toFixed(4)} pollen</strong>`;
-                if (keyData?.type) detail += `${detail ? ' &mdash; ' : ''}Type: <strong>${keyData.type}</strong>`;
-
-                document.getElementById('keyDetails').innerHTML = `
-                    <div style="padding:10px 0; color: var(--gray); font-size:0.9rem;">${detail || 'Authenticated ✓'}</div>
-                    <button class="action-btn" onclick="disconnectApiKey()" style="border-color: var(--error); color: var(--error); margin-top:8px;">Disconnect</button>
-                `;
-                updateAuthStatus(true);
-            } catch (e) {
-                showAuthError("Network error while verifying key: " + e.message);
-            } finally {
-                btn.textContent = 'Save Key';
-                btn.disabled = false;
-            }
+            btn.textContent = 'Save Key';
+            btn.disabled = false;
         }
 
         function showAuthError(msg) {
@@ -485,7 +511,7 @@
             apiKey = '';
             localStorage.removeItem('pollinationsApiKey');
             document.getElementById('apiKey').value = '';
-            document.getElementById('keyDetails').innerHTML = '';
+            document.getElementById('keyDetailsText').innerHTML = '';
             clearAuthError();
             updateAuthStatus(false);
         }
@@ -504,10 +530,27 @@
             }
         }
 
+        function toggleCustomSize() {
+            const sizeSelect = document.getElementById('size').value;
+            const customDiv = document.getElementById('customSizeInputs');
+            if (sizeSelect === 'custom') {
+                customDiv.style.display = 'flex';
+            } else {
+                customDiv.style.display = 'none';
+            }
+        }
+
         async function generateImage() {
-            if (!apiKey) return showGenerateError("Please set and verify an API key first.");
+            if (!apiKey) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return showAuthError("Please set and verify an API key first, or Connect your Account.");
+            }
+            
             const prompt = document.getElementById('prompt').value.trim();
-            if (!prompt) return showGenerateError("Please enter a prompt.");
+            if (!prompt) {
+                document.getElementById('prompt').focus();
+                return showGenerateError("Please enter a prompt describing the image.");
+            }
 
             const btn = document.getElementById('generateBtn');
             const loader = document.getElementById('loading');
@@ -515,41 +558,42 @@
             const res = document.getElementById('resultSection');
 
             btn.disabled = true;
-            res.style.display = 'block';
+            res.classList.add('active');
             loader.style.display = 'flex';
             img.style.display = 'none';
             clearGenerateError();
 
             const model = document.getElementById('model').value;
-            const [w, h] = document.getElementById('size').value.split('x');
+            
+            // Handle Dimensions
+            let w, h;
+            if (document.getElementById('size').value === 'custom') {
+                w = document.getElementById('customWidth').value || 1024;
+                h = document.getElementById('customHeight').value || 1024;
+            } else {
+                [w, h] = document.getElementById('size').value.split('x');
+            }
+
+            // Options
             const seed = document.getElementById('seed').value;
+            const enhance = document.getElementById('enhancePrompt').checked;
+            const negativePrompt = document.getElementById('negativePrompt').value.trim();
 
             let url = `https://gen.pollinations.ai/image/${encodeURIComponent(prompt)}?width=${w}&height=${h}&model=${model}&nologo=true`;
             if (seed !== "-1") url += `&seed=${seed}`;
+            if (enhance) url += `&enhance=true`;
+            if (negativePrompt) url += `&negative_prompt=${encodeURIComponent(negativePrompt)}`;
 
             try {
                 const response = await fetch(url, { headers: { 'Authorization': `Bearer ${apiKey}` } });
 
                 if (!response.ok) {
-                    // Try to parse the JSON error body
                     let errorMsg = `Request failed (HTTP ${response.status})`;
                     try {
                         const contentType = response.headers.get('content-type') || '';
                         if (contentType.includes('application/json')) {
                             const errData = await response.json();
                             errorMsg = errData?.error?.message || errData?.message || errorMsg;
-                            if (errData?.error?.code) errorMsg += ` [${errData.error.code}]`;
-
-                            // If error message contains a cost hint, try to parse and cache it
-                            const costMatch = errorMsg.match(/costs?\s*~?([\d.]+)\s*pollen/i);
-                            if (costMatch) {
-                                const modelId = document.getElementById('model').value;
-                                if (modelData[modelId]) {
-                                    modelData[modelId].pricing = modelData[modelId].pricing || {};
-                                    modelData[modelId].pricing.completionImageTokens = String(parseFloat(costMatch[1]));
-                                    updateModelCost();
-                                }
-                            }
                         } else {
                             const text = await response.text();
                             if (text) errorMsg = text;
@@ -559,15 +603,17 @@
                 }
 
                 const blob = await response.blob();
+                if (currentImageUrl) URL.revokeObjectURL(currentImageUrl);
                 currentImageUrl = URL.createObjectURL(blob);
                 img.src = currentImageUrl;
+                
                 img.onload = () => {
                     loader.style.display = 'none';
                     img.style.display = 'block';
                     btn.disabled = false;
                 };
 
-                // After successful generation, fetch actual cost from usage history
+                // After successful generation, fetch actual cost
                 fetchLastRequestCost();
             } catch (e) {
                 loader.style.display = 'none';
@@ -600,7 +646,7 @@
         async function fetchLastRequestCost() {
             if (!apiKey) return;
             try {
-                // Small delay so the usage record is committed
+                // Short delay to allow backend stats to update
                 await new Promise(r => setTimeout(r, 1500));
                 const res = await fetch('https://gen.pollinations.ai/account/usage?limit=1', {
                     headers: { 'Authorization': `Bearer ${apiKey}` }
@@ -621,11 +667,10 @@
                     document.getElementById('resultSection').querySelector('.action-buttons').after(el);
                 }
 
-                let parts = ['✅ Generation complete'];
+                let parts =['✅ Generation complete'];
                 if (model) parts.push(`Model: <strong>${escapeHtml(model)}</strong>`);
                 if (costUsd !== null) parts.push(`Cost: <strong>$${parseFloat(costUsd).toFixed(6)} USD</strong>`);
 
-                // Also update the balance display if present
                 updateBalanceDisplay();
 
                 el.innerHTML = parts.join(' &nbsp;·&nbsp; ');
@@ -643,25 +688,40 @@
                 const data = await res.json();
                 const balance = data?.balance ?? null;
                 if (balance === null) return;
-                // Update the balance shown in keyDetails if it's there
-                const keyDetails = document.getElementById('keyDetails');
-                if (keyDetails) {
-                    const balSpan = keyDetails.querySelector('[data-balance]');
-                    if (balSpan) balSpan.textContent = parseFloat(balance).toFixed(4) + ' pollen';
-                }
+                
+                const balSpan = document.querySelector('[data-balance]');
+                if (balSpan) balSpan.textContent = parseFloat(balance).toFixed(4) + ' pollen';
+                
             } catch (_) {}
         }
 
         function downloadImage() {
             const a = document.createElement('a');
             a.href = currentImageUrl;
-            a.download = "generated-image.png";
+            
+            // Create a smart filename based on prompt
+            const promptText = document.getElementById('prompt').value.trim();
+            const filenameText = promptText 
+                ? promptText.slice(0, 30).replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_').toLowerCase() 
+                : 'generated';
+                
+            a.download = `pollinations-${filenameText}.png`;
             a.click();
         }
 
         function copyImageUrl() {
-            navigator.clipboard.writeText(currentImageUrl);
-            alert("Copied to clipboard!");
+            navigator.clipboard.writeText(currentImageUrl).then(() => {
+                const btn = document.querySelectorAll('.action-btn')[1];
+                const oldText = btn.textContent;
+                btn.textContent = 'Copied! ✓';
+                btn.style.background = 'var(--primary)';
+                btn.style.color = 'white';
+                setTimeout(() => {
+                    btn.textContent = oldText;
+                    btn.style.background = 'white';
+                    btn.style.color = 'var(--primary)';
+                }, 2000);
+            });
         }
     </script>
 </body>
