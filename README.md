@@ -66,7 +66,7 @@ If you want to host this application:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/pollinations-image-generator.git
+git clone https://github.com/moh65-debug/pollinations-image-generator.git
 
 # Navigate to the directory
 cd pollinations-image-generator
